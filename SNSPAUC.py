@@ -1,41 +1,6 @@
 import pandas as pd
 import csv
 
-def calculating_auc_gen():
-    total_controls = # insert here
-    total_cases = # insert here
-    thresholds = [0,1, 2, 3, 4, 5, 6, 7, 8, 9]
-    control_counts = []
-    case_counts = []
-    fpr_list = [1]
-    tpr_list = [1]
-    cumulative_control_count = 0
-    cumulative_case_count = 0
-
-    for threshold in thresholds:
-        control_count = df_copy.loc[(df_copy['Sum'] == threshold) & (df_copy['Disease'] == 0)].shape[0]
-        case_count = df.loc[(df_copy['Sum'] == threshold) & (df_copy['Disease'] == 1)].shape[0]
-        control_counts.append(control_count)
-        case_counts.append(case_count)
-        
-        cumulative_control_count += control_count
-        cumulative_case_count += case_count
-        fpr_list.append(1 - (cumulative_control_count / total_controls))
-        tpr_list.append(1-(cumulative_case_count / total_cases))
-        
-    auc_score = 0
-    for i in range(1, len(fpr_list)):
-        auc_score += (fpr_list[i-1] - fpr_list[i]) * tpr_list[i-1]
-
-    return auc_score
-  
-def read_combinations_from_csv(filename):
-    with open(filename, 'r') as csvfile:
-        reader = csv.reader(csvfile)
-        next(reader)  # Skip the header row
-        for row in reader:
-            yield row
-  
 mean_biomarker1 = 30
 mean_biomarker2 = 33.5
 mean_biomarker3 = 26.5
@@ -53,6 +18,35 @@ mean_biomarker14 = 28.9
 mean_biomarker15 = 19
 mean_biomarker16 = 23.4
 
+def calculating_auc_gen():
+    total_control = 56
+    total_case = 44
+
+    thresholds = [0,1, 2, 3, 4, 5, 6, 7, 8, 9]
+    control_counts = []
+    case_counts = []
+    fpr_list = [1]
+    tpr_list = [1]
+    cumulative_control_count = 0
+    cumulative_case_count = 0
+
+    for threshold in thresholds:
+        control_count = df_copy.loc[(df_copy['Sum'] == threshold) & (df_copy['Disease'] == 0)].shape[0]
+        case_count = df.loc[(df_copy['Sum'] == threshold) & (df_copy['Disease'] == 1)].shape[0]
+        control_counts.append(control_count)
+        case_counts.append(case_count)
+        
+        cumulative_control_count += control_count
+        cumulative_case_count += case_count
+        fpr_list.append(1 - (cumulative_control_count / total_control))
+        tpr_list.append(1-(cumulative_case_count / total_case))
+        
+    auc_score = 0
+    for i in range(1, len(fpr_list)):
+        auc_score += (fpr_list[i-1] - fpr_list[i]) * tpr_list[i-1]
+
+    return auc_score
+
 
 subtraction_values = {'Biomarker 1': mean_biomarker1, 'Biomarker 2': mean_biomarker2, 'Biomarker 3': mean_biomarker3,
                       'Biomarker 4': mean_biomarker4, 'Biomarker 5': mean_biomarker5, 'Biomarker 6': mean_biomarker6,
@@ -61,13 +55,13 @@ subtraction_values = {'Biomarker 1': mean_biomarker1, 'Biomarker 2': mean_biomar
                       'Biomarker 14': mean_biomarker14, 'Biomarker 15': mean_biomarker15, 'Biomarker 16': mean_biomarker16
                       }
 
-y = 9 # end column 
-cutoff = 3 #cut-off
+y = 9
+cutoff = 3
 results = []
 
-df = pd.read_csv("#insert raw ct values file")
+df = pd.read_csv("/Users/sarrahrose/Downloads/29May_RawCT - Sheet1 (1).csv")
 
-combinations_generator = read_combinations_from_csv('#insert file containing combinations')
+combinations_generator = read_combinations_from_csv('/Users/sarrahrose/Downloads/29May_RawCT - Sheet2 (1).csv')
 for combination in combinations_generator:
 
     # Create a new subtraction dictionary based on the selected combination
@@ -76,11 +70,13 @@ for combination in combinations_generator:
     # Update the subtraction values dictionary with the selected values
     subtraction_values.update(selected_subtraction_values)
 
-    # Perform the calculations as in current code
+    # Perform the calculations as in your current code
     df_copy = df.copy()
     biomarkers_to_drop = [col for col in df_copy.columns if col not in combination and col not in ['Patient', 'Disease', 'Stage']]
     df_copy = df_copy.drop(columns=biomarkers_to_drop)
 
+    # Perform the remaining calculations
+      # Iterate over each column
     columns = df_copy.columns
     for col in columns[3:y]:
         for index, row in df_copy.iterrows():
@@ -120,7 +116,7 @@ for combination in combinations_generator:
     results.append({'combination': combination, 'sensitivity': sensitivity, 'specificity': specificity, 'auc':auc_scored})
 
 # Write the results to a CSV file
-with open('#insert name of results file', 'w', newline='') as csvfile:
+with open('6combo_cutoff3_test.csv', 'w', newline='') as csvfile:
     fieldnames = ['combination', 'sensitivity', 'specificity', 'auc']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames, quoting=csv.QUOTE_NONNUMERIC)
 
@@ -129,3 +125,4 @@ with open('#insert name of results file', 'w', newline='') as csvfile:
         result['sensitivity'] = format(result['sensitivity'], '.5f')
         result['specificity'] = format(result['specificity'], '.5f')
         writer.writerow(result)
+
