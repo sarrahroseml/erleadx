@@ -32,7 +32,7 @@ def calculating_auc_gen():
 
     for threshold in thresholds:
         control_count = df_copy.loc[(df_copy['Sum'] == threshold) & (df_copy['Disease'] == 0)].shape[0]
-        case_count = df.loc[(df_copy['Sum'] == threshold) & (df_copy['Disease'] == 1)].shape[0]
+        case_count = df_copy.loc[(df_copy['Sum'] == threshold) & (df_copy['Disease'] == 1)].shape[0]
         control_counts.append(control_count)
         case_counts.append(case_count)
         
