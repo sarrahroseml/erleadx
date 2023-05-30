@@ -2,6 +2,8 @@ import pandas as pd
 import csv
 
 def calculating_auc_gen():
+    total_controls = # insert here
+    total_cases = # insert here
     thresholds = [0,1, 2, 3, 4, 5, 6, 7, 8, 9]
     control_counts = []
     case_counts = []
@@ -18,8 +20,8 @@ def calculating_auc_gen():
         
         cumulative_control_count += control_count
         cumulative_case_count += case_count
-        fpr_list.append(1 - (cumulative_control_count / 51))
-        tpr_list.append(1-(cumulative_case_count / 42))
+        fpr_list.append(1 - (cumulative_control_count / total_controls))
+        tpr_list.append(1-(cumulative_case_count / total_cases))
         
     auc_score = 0
     for i in range(1, len(fpr_list)):
