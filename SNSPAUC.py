@@ -100,8 +100,8 @@ for combination in combinations_generator:
     # calculate true positive, true negative, false positive, and false negative
     true_positive = confusion_matrix[1][1]
     true_negative = confusion_matrix[0][0]
-    false_positive = confusion_matrix[0][1]
-    false_negative = confusion_matrix[1][0]
+    false_positive = confusion_matrix[1][0]
+    false_negative = confusion_matrix[0][1]
 
     # calculate sensitivity and specificity
     sensitivity = true_positive / (true_positive + false_negative)
