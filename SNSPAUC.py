@@ -53,6 +53,7 @@ mean_biomarker14 = 28.9
 mean_biomarker15 = 19
 mean_biomarker16 = 23.4
 
+
 subtraction_values = {'Biomarker 1': mean_biomarker1, 'Biomarker 2': mean_biomarker2, 'Biomarker 3': mean_biomarker3,
                       'Biomarker 4': mean_biomarker4, 'Biomarker 5': mean_biomarker5, 'Biomarker 6': mean_biomarker6,
                       'Biomarker 7': mean_biomarker7, 'Biomarker 8': mean_biomarker8, 'Biomarker 9': mean_biomarker9,
@@ -60,12 +61,13 @@ subtraction_values = {'Biomarker 1': mean_biomarker1, 'Biomarker 2': mean_biomar
                       'Biomarker 14': mean_biomarker14, 'Biomarker 15': mean_biomarker15, 'Biomarker 16': mean_biomarker16
                       }
 
-df = pd.read_csv(" insert file containing raw CT values here"
-y = 8 #the end column in that biomarker combinatin(e.g. for 6 biomarkers, col 3 to col 8)
-cutoff = 3 #sum >= value for Fold Change Calculation
+y = 9 # end column 
+cutoff = 3 #cut-off
 results = []
 
-combinations_generator = read_combinations_from_csv(' insert file containing combinations here ')
+df = pd.read_csv("#insert raw ct values file")
+
+combinations_generator = read_combinations_from_csv('#insert file containing combinations')
 for combination in combinations_generator:
 
     # Create a new subtraction dictionary based on the selected combination
@@ -74,13 +76,11 @@ for combination in combinations_generator:
     # Update the subtraction values dictionary with the selected values
     subtraction_values.update(selected_subtraction_values)
 
-    # Perform the calculations as in your current code
+    # Perform the calculations as in current code
     df_copy = df.copy()
     biomarkers_to_drop = [col for col in df_copy.columns if col not in combination and col not in ['Patient', 'Disease', 'Stage']]
     df_copy = df_copy.drop(columns=biomarkers_to_drop)
 
-    # Perform the remaining calculations
-      # Iterate over each column
     columns = df_copy.columns
     for col in columns[3:y]:
         for index, row in df_copy.iterrows():
@@ -105,6 +105,11 @@ for combination in combinations_generator:
     false_positive = confusion_matrix[1][0]
     false_negative = confusion_matrix[0][1]
 
+    print("tp",true_positive)
+    print("fp",false_positive)
+    print("tn",true_negative)
+    print("fn",false_negative)
+
     # calculate sensitivity and specificity
     sensitivity = true_positive / (true_positive + false_negative)
     specificity = true_negative / (true_negative + false_positive)
@@ -115,14 +120,12 @@ for combination in combinations_generator:
     results.append({'combination': combination, 'sensitivity': sensitivity, 'specificity': specificity, 'auc':auc_scored})
 
 # Write the results to a CSV file
-with open('noofcombis&cutoff', 'w', newline='') as csvfile:
-    fieldnames = ['combination', 'sensitivity', 'specificity','auc']
-    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+with open('#insert name of results file', 'w', newline='') as csvfile:
+    fieldnames = ['combination', 'sensitivity', 'specificity', 'auc']
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames, quoting=csv.QUOTE_NONNUMERIC)
 
     writer.writeheader()
     for result in results:
+        result['sensitivity'] = format(result['sensitivity'], '.5f')
+        result['specificity'] = format(result['specificity'], '.5f')
         writer.writerow(result)
-
-
-
-
