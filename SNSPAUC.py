@@ -21,6 +21,7 @@ mean_biomarker16 = 23.4
 def read_combinations_from_csv(filename):
     with open(filename, 'r') as csvfile:
         reader = csv.reader(csvfile)
+        next(reader)  # Skip the header row
         for row in reader:
             yield row
 
