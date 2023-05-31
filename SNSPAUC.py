@@ -18,6 +18,13 @@ mean_biomarker14 = 28.9
 mean_biomarker15 = 19
 mean_biomarker16 = 23.4
 
+def read_combinations_from_csv(filename):
+    with open(filename, 'r') as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            yield row
+
+
 def calculating_auc_gen():
     total_control = 56
     total_case = 44
