@@ -30,7 +30,7 @@ def calculating_auc_gen():
     total_control = 56
     total_case = 44
 
-    thresholds = [0,1, 2, 3, 4, 5, 6, 7, 8, 9]
+    thresholds = [0,1, 2, 3, 4, 5, 6, 7, 8, 9] #remember to adjust this according to number of biomarkers present
     control_counts = []
     case_counts = []
     fpr_list = [1]
@@ -63,7 +63,7 @@ subtraction_values = {'Biomarker 1': mean_biomarker1, 'Biomarker 2': mean_biomar
                       'Biomarker 14': mean_biomarker14, 'Biomarker 15': mean_biomarker15, 'Biomarker 16': mean_biomarker16
                       }
 
-y = 9
+y = 9 #for 6 biomarkers
 cutoff = 3
 results = []
 
