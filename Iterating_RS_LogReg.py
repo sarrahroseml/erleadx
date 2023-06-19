@@ -1,7 +1,7 @@
 """"
-This file is meant to iterate thrugh 100 random states (how the data is shuffled), and train a logistic regression model on each of these random states.
+This file is meant to iterate through 100 random states (how the data is shuffled), and train a logistic regression model on each of these random states.
 It outputs a csv file with the random state the logreg model is using, sensitivity and specificity for that model. 
-The purpose of this is to find the specific logreg models which output a high SN and SP. Then use the test_size and random_state values in file 
+The purpose of this is to find a few logreg models which output a high SN and SP. Then use the test_size and random_state values in file 
 """"
 
 import pandas as pd
