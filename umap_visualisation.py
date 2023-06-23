@@ -1,3 +1,10 @@
+""""
+This file is purely to visualise datapoints using UMAP. It isn't the train/test model. It reads in the file of Raw CT values and outputs a UMAP plot.
+The silhoutte coefficient, davies_bouldin_index & calinski_harabasz_index are different metrics to calculate how separated/distinct the various groups 
+in the UMAP plot are. 
+
+"""
+
 !pip install umap-learn
 import umap.umap_ as umap
 import pandas as pd
@@ -10,7 +17,7 @@ X = df_umap[[ 'Biomarker 1','Biomarker 2','Biomarker 3','Biomarker 5','Biomarker
 
 # Perform dimensionality reduction with UMAP
 umap_model = umap.UMAP(n_neighbors=20, min_dist=0.50, n_components=4, metric='manhattan',random_state=42)
-umap_result = umap_model.fit_transform(X, df_umap['Disease'])
+umap_result = umap_model.fit_transform(X, df_umap['Disease']) #X is the rawCT values, df_umap['Disease'] is the label that allows you to force fit the separation
 
 # Add x and y axis labels
 plt.xlabel('UMAP1')
