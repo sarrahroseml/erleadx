@@ -1,3 +1,8 @@
+""""
+This file is meant to help identify the optimal combination of biomarkers. It reads the file generated from 'Generating_Combinations.py' and calculates
+the SN, SP and AUC of each combination. 
+""""
+
 import pandas as pd
 import csv
 
@@ -25,12 +30,12 @@ def read_combinations_from_csv(filename):
         for row in reader:
             yield row
 
-
+#Function to calculate AUC
 def calculating_auc_gen():
     total_control = 56
     total_case = 44
 
-    thresholds = [0,1, 2, 3, 4, 5, 6, 7, 8, 9] #remember to adjust this according to number of biomarkers present
+    thresholds = [0,1, 2, 3, 4, 5, 6, 7, 8] #remember to adjust this according to number of biomarkers present (i.e. all possible risk scores)
     control_counts = []
     case_counts = []
     fpr_list = [1]
@@ -63,13 +68,13 @@ subtraction_values = {'Biomarker 1': mean_biomarker1, 'Biomarker 2': mean_biomar
                       'Biomarker 14': mean_biomarker14, 'Biomarker 15': mean_biomarker15, 'Biomarker 16': mean_biomarker16
                       }
 
-y = 9 #for 6 biomarkers
-cutoff = 3
+y = 9 #for 6 biomarkers (adjust accordingly). This y variable is used to mark the end range of columns of biomarkers to process. 
+cutoff = 3 #Adjust accordingly
 results = []
 
-df = pd.read_csv("/Users/sarrahrose/Downloads/29May_RawCT - Sheet1 (1).csv")
+df = pd.read_csv(#file path for CSV file containing raw CT values) 
 
-combinations_generator = read_combinations_from_csv('/Users/sarrahrose/Downloads/29May_RawCT - Sheet2 (1).csv')
+combinations_generator = read_combinations_from_csv(#file path for CSV file containing all possible combinations for n biomarkers)
 for combination in combinations_generator:
 
     # Create a new subtraction dictionary based on the selected combination
@@ -124,7 +129,7 @@ for combination in combinations_generator:
     results.append({'combination': combination, 'sensitivity': sensitivity, 'specificity': specificity, 'auc':auc_scored})
 
 # Write the results to a CSV file
-with open('6combo_cutoff3_test.csv', 'w', newline='') as csvfile:
+with open('6combo_cutoff3_test.csv', 'w', newline='') as csvfile: #Adjust name of file accordingly
     fieldnames = ['combination', 'sensitivity', 'specificity', 'auc']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames, quoting=csv.QUOTE_NONNUMERIC)
 
